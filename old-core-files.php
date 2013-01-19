@@ -167,18 +167,22 @@ class Old_Core_Files {
 			if ( $wp_filesystem->exists( $path_to_wp . $old_file ) )
 				$existing_old_files[] = $old_file;
 		}
+		?>
 
+		<ul class="subsubsub">
+			<li class="all"><a href="<? admin_url( $this->parent_slug . '?page=' . $this->page_slug . '&show=all' ); ?>"><?php echo __( 'All', 'ocf' ); ?> <span class="count">(<?php echo count( $_old_files ); ?>)</span></a> |</li>
+			<li class="existing"><a href="<? admin_url( $this->parent_slug . '?page=' . $this->page_slug . '&show=existing' ); ?>" class="current"><?php echo __( 'Existing', 'ocf' ); ?> <span class="count">(<?php echo count( $existing_old_files ); ?>)</span></a></li>
+		</ul>
+		
+		<br class="clear">
+
+		<?php
 		if ( ! empty( $existing_old_files ) ) :
 			$i=0;
 			?>
 			<p><?php esc_html_e( 'We have found some old files in this WordPress installation. Please review the files below.', 'ocf' ); ?></p>
 
-			<ul class="subsubsub">
-				<li class="all"><a href="..."><?php echo __( 'All', 'ocf' ); ?> <span class="count">(<?php echo count( $_old_files ); ?>)</span></a> |</li>
-				<li class="existing"><a href="..." class="current"><?php echo __( 'Existing', 'ocf' ); ?> <span class="count">(<?php echo count( $existing_old_files ); ?>)</span></a></li>
-			</ul>
-
-			<table class="widefat post-revisions" cellspacing="0">
+			<table class="widefat" cellspacing="0">
 				<thead>
 					<tr>
 						<th scope="col"><?php esc_html_e( 'File', 'ocf' ); ?></th>
@@ -192,15 +196,23 @@ class Old_Core_Files {
 							<code><?php echo esc_html( $existing_file ); ?></code>
 						</td>
 						<td class="action-links">
+							<?php if ( current_user_can( $this->view_cap ) ) : // Double check befor allowing 'delete' action ?>
 							<span class="trash"><a href="<? admin_url( $this->parent_slug . '?page=' . $this->page_slug ); /* Add nonce, Add 'action=delete', Add File name (for deletion) */ ?>"><?php echo __( 'Delete', 'ocf' ); ?></a></span>
+							<?php endif; ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
 				<tfoot>
 					<tr>
-						<td><?php echo __( 'Total Files:', 'ocf' ); echo $i; ?></td>
-						<td></td>
+						<td>
+							<?php echo __( 'Total Files:', 'ocf' ); echo $i; ?>
+						</td>
+						<td class="action-links">
+							<?php if ( current_user_can( $this->view_cap ) ) : // Double check befor allowing 'delete' action ?>
+							<span class="trash"><a href="<? admin_url( $this->parent_slug . '?page=' . $this->page_slug ); /* Add nonce, Add 'action=delete', Add File name (for deletion) */ ?>"><?php echo __( 'Delete All', 'ocf' ); ?></a></span>
+							<?php endif; ?>
+						</td>
 					</tr>
 				</tfoot>
 			</table><?php
